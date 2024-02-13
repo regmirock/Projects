@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exension Page Design</title>
+    <link rel = "stylesheet" href ="styles1.css">
+</head>
+<body>
+    <div class ="container">
+        <div class = "bar-menu">
+            <ul> 
+                <li  data-sec = "PassGen">
+                    <i class = "fa-solid fa -user-group"></i>
+                    <span>PassGen</span>
+                </li>
+                <li  data-sec = "SavePass">
+                    <i class = "fa-solid fa-user-group"></i>
+                    <span>SavePass</span>
+                </li>
+                <li  data-sec = "Vault">
+                    <i class = "fa-solid fa -user-group"></i>
+                    <span>Vault</span>
+                </li>
+                <li  data-sec = "Profile">
+                    <i class = "fa-solid fa -user-group"></i>
+                    <span>Profile</span>
+                </li>
+
+
+            </ul>
+        </div>
+        <main class="content"> 
+            <section id = "SavePass-forum" class ="box SavePass active"></section>
+            <form action="savepass_process.php" method="post"></form>
+                <h1>Submit your Credentials</h1>
+                <h4> You can submit your credentials here</h4>
+                <label>Site Name:</label>
+                <input type="text" id="Site " name="Site" required>
+                <label>Username:</label>
+                <input type="text" id="Username" name="Username" required>
+                <label>Password:</label>
+                <input type="text" id="Password" name="Password" required>
+                <button type="submit">Save Password</button>
+            </form>
+            </section>
+            <section id="PassGenSec" class = "PassGeSec">
+                
+            </section>
+
+        </main>
+    </div>
+
+</body>
+
+</html>
