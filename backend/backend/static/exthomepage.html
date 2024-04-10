@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';">
+     <title>Extension Page Design</title>
+    <link rel="stylesheet" href="styles1.css">
+</head>
+<body>
+    <div class="container">
+        <div class="bar-menu">
+            <ul>
+                <li data-sec="PassGen">
+                    <i class="fa-solid fa -user-group"></i>
+                    <span id="passGenLink">PassGen</span>
+                </li>
+                <li data-sec="SavePass">
+                    <i class="fa-solid fa-user-group"></i>
+                    <span id="savePassLink">SavePass</span>
+                </li>
+                <li data-sec="Vault">
+                    <i class="fa-solid fa-user-group"></i>
+                    <span id="vaultLink">Vault</span>
+                </li>
+                <li data-sec="Profile">
+                    <i class="fa-solid fa-user-group"></i>
+                    <span id="profileLink">Profile</span>
+                </li>
+            </ul>
+        </div>
+        <main class="content">
+            <section id="SavePass-form" class="box SavePass active">
+                <form action="#" method="post">
+                    <h1>Submit your Credentials</h1>
+                    <h4>You can submit your credentials here</h4>
+                    <label>Site Name:</label>
+                    <input type="text" id="Site" name="Site" required>
+                    <label>Username:</label>
+                    <input type="text" id="Username" name="Username" required>
+                    <label>Password:</label>
+                    <input type="text" id="Password" name="Password" required>
+                    <button type="submit">Save Password</button>
+                </form>
+            </section>
+            <section id="PassGenSec" class="PassGeSec">
+                <h1>Password Generator</h1>
+                <h2> Generate a <br><span>Random Password</span></h2>
+                <div class = "display">
+                    <input type = "text" id = "password" placeholder="Password">
+                    <img id="copyButton" src="/copy.png">
+                </div>
+                <button><img src="/generate.png">Generate</button>
+            </section>
+            
+            <section id="VaultSec" class="VaultSec">
+                <h1>Vault</h1>
+                <p>
+                    Welcome to the Vault section! This is where you can see all the list of logging credentials
+                    of your accounts.
+                </p>
+                <p>
+                    Feel free to explore the features and create passwords that help enhance the security
+                    of your online accounts.
+                </p>
+            </section>
+            <section id="ProfileSec" class="ProfileSec">
+                <h1>Profile</h1>
+                <p>
+                    Welcome to the Profile section! This is where you can see your profile
+                </p>
+                <p>
+                    Feel free to explore the features of this section. It gives your personal information
+                </p>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

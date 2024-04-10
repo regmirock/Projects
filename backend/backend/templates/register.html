@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign up Form</title>
+    {% load static%}
+    <link rel="stylesheet" type="text/css" href = {% static "/style.css"%}>
+    
+</head>
+<body>
+    <div class="register-box">
+        <div class="logo-login">
+            <img src = "\static\SecurePlus.png" alt = "Logo" class = "logo">
+        </div>
+        <h1> Sign Up </h1>
+        <h4> Regsiter with us in just few seconds</h4>
+        <form method ="POST" action ="{% url 'insertuser'%}">
+            {% csrf_token %}
+            <label> Name</label>
+            <input type = "text" id ="name" placeholder = "" name = "fullname">
+            <label> Email </label>
+            <input type = "email" id = "email" placeholder = "" name="email">
+            <label for ="password"> Master Password</label>
+            <input type="password" id ="password" placeholder = ""name="password">
+            <label for ="confrm-pass"> Confirm Password</label>
+            <input type = "password" id ="confrm-pass" placeholder = "" name ="con_password">
+            <p1 id="message"></p1>
+            <input type = "button" name ="register" onclick = "checkPass()" value = "Signup">
+            <p> By Clicking in Signup you agree to our terms and conditions.</p>
+        </form>
+    </div>
+    <script src="{% static 'javascript.js' %}"></script>   
+</body>
+</html>

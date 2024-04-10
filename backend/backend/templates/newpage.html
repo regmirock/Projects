@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';">
+     <title>Extension Page Design</title>
+     <link rel="stylesheet"type="text/css" href = {% static "/styles1.css"%}>
+     <script src="{% static 'script.js' %}"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="bar-menu">
+            <ul>
+                <li data-sec="PassGen">
+                    <i class="fa-solid fa-user-group"></i>
+                    <span id="passGenLink">PassGen</span>
+                </li>
+                <li data-sec="SavePass">
+                    <i class="fa-solid fa-user-group"></i>
+                    <span id="savePassLink">SavePass</span>
+                </li>
+                <li data-sec="Vault">
+                    <i class="fa-solid fa-user-group"></i>
+                    <span id="vaultLink">Vault</span>
+                </li>
+                <li data-sec="Profile">
+                    <i class="fa-solid fa-user-group"></i>
+                    <span id="profileLink">Profile</span>
+                </li>
+            </ul>
+        </div>
+        <main class="content">
+            <section id="SavePass-form" class="box SavePass active">
+                <form method="post" action="{% url 'save_credentials' %}">
+                    {% csrf_token %}
+                    <h1>Submit your Credentials</h1>
+                    <h4>You can submit your credentials here</h4>
+                    <label>Site Name:</label>
+                    <input type="text" id="Site" name="Site" required>
+                    <label>Username:</label>
+                    <input type="text" id="Username" name="Username" required>
+                    <label>Password:</label>
+                    <input type="text" id="Password" name="Password" required>
+                    <button type="submit">Save Password</button>
+                </form>
+            </section>
+            <section id="PassGenSec" class="PassGeSec">
+                <h1>Password Generator</h1>
+                <h2> Generate a <br><span>Random Password</span></h2>
+                <div class = "display">
+                    <input type = "text" id = "password" placeholder="Password">
+                    <img id="copyButton" src="\static\copy.png">
+                </div>
+                <button><img src="\static\generate.png">Generate</button>
+            </section>
+            
+            <section id="VaultSec" class="VaultSec">
+                <h1>Vault</h1>
+                <p>
+                  Welcome to the Vault section! This is where you can see all the list of logging credentials
+                  of your accounts.
+                </p>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Site Name</th>
+                      <th>Username</th>
+                      <th>Password (Masked)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% if not user_credentials %}
+                      <p>No credentials stored yet. Add some credentials to your vault!</p>
+                    {% else %}
+                      {% for credential in user_credentials %}
+                      <tr>
+                        <td>{{ credential.SiteName }}</td>
+                        <td>{{ credential.Username }}</td>
+                        <td>{{ credential.Password|slice:"0:4" }}... (password hidden)</td>
+                      </tr>
+                      {% endfor %}
+                    {% endif %}
+                  </tbody>
+                </table>
+              </section>
+              
+              
+            <section id="ProfileSec" class="ProfileSec">
+              
+                <h1>Profile</h1>
+                <p>
+                    Welcome to the Profile section!
+                </p>
+                <img src = /static/Profpic.png/ class ="profile-pic" alt="Profile Picture">
+            
+        
+                <div>
+                
+                     <h3>User Information:</h3>
+                     <p><strong>Name:</strong> {{ user_name }}</p>
+                     <p><strong>Email:</strong> {{ user_email }}</p>
+                     
+                </div>
+                
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

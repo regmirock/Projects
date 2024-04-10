@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <link rel="stylesheet"type="text/css" href = {% static "/style.css"%}>
+</head>
+<body>
+    <div class="login-box">
+        <div class="logo-login">
+            <img src = "\static\SecurePlus.png" alt = "Logo" class = "logo">
+        </div>
+        <h1> Login </h1>
+        <h4> You can use your registered details to get logged in</h4>
+        <form method="post" action="{% url 'user_login' %}">
+            {% csrf_token %}
+            <label> Email </label>
+            <input type = "email" placeholder = "" name = "email">
+            <label> Master Password</label>
+            <input type="password" placeholder = "" name = "password">
+            <input type = "submit" value = "Login">
+            <p> New to Secure Plus? <a href = "{% url 'register' %}"> register</a></p>
+        </form>
+        {% if error_message %}
+            <p>{{ error_message }}</p>
+        {% endif %}
+    </div>
+    <script src="javascript.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "manifest_version": 2,
+  "name": "Secure Plus",
+  "version": "2.0",
+  "description": "My first extension",
+  "browser_action": {
+      "default_popup": "extlogin.html"
+  },
+  "permissions": [
+      "activeTab",
+      "storage"
+  ],
+  "content_security_policy": "script-src 'self' https://cdnjs.cloudflare.com; object-src 'self'"
+}

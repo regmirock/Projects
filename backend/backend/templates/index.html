@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <script src="{% static 'javascript.js' %}"></script>
+
+    <link rel="stylesheet" type="text/css" href = {% static "/style.css"%}>
+</head>
+<body>
+    <header>
+        <div class="logo-cont">
+            <img src = "\static\SecurePlus.png" alt = "Logo" class = "logo">
+        </div>
+        <nav>
+            <button onclick="scrollToSection('Welcome')">Welcome</button>
+            <button onclick="scrollToSection('Help')">Help</button>
+            <button onclick="scrollToSection('About Us')">About Us</button> 
+            <a href="login1.html">
+                <button>Login</button>
+            </a>
+        </nav>
+    </header>
+    <section id="Welcome" class="content-section">
+        <h2>Welcome</h2>
+        <img src="\static\welcome.png" alt ="Welcome image" class = "welcome-image">
+        <div class="content">
+        <p>You are welcome to Secure Plus.<br> We are here just for you. Give your burden of remembering your password to us. We are here for you and manage all your passwords and make you feel relax. We aim to keep you locked.</p>
+        </div>
+    </section>
+
+    <section id="Help" class="content-section">
+        <h2> Help </h2>
+        <img src = "\static\help.png" alt = "Help image" class = "help-image">
+        <p>If wonderig how to use the Website.<br> Here we bring the ideas and how you can actually use the website functionalities.<br>This section will help you how to use website, create an account and how to use our tool in effective and useful way.</p> We will be uploading some useful videos which will assist you further in near future.
+    </section>
+
+    <section id="About Us" class="content-section">
+        <h2>About Us</h2>
+        <img src ="\static\Aboutus.png" alt ="Aboutus image" class="aboutus-image">
+        <p>We are protectors, securers and burden-sharers.<br> We are here to help you and to make you feel secured and relaxed. You can make an optimum use of us to lessen your burden and find ways to make good passwords. We are here just for you and only for you.<br> </p>We value you and your credentials. We are here for you and only for you.We priortise your needs and work on storing your invaluable digital assests safely and securely in more advanced ways.
+    </section>
+    <script src="javascript.js"></script>
+</body>
+</html>

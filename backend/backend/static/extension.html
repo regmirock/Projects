@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Secure Plus Extension</title>
+</head>
+<body>
+    <h1>Welcome to Secure Plus Extension</h1>
+    <script>
+        fetch('http://your-django-backend.com/api/get_data')
+            .then(response => response.json())
+            .then(data => {
+                // Process the retrieved data
+                console.log(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    </script>
+</body>
+</html>
