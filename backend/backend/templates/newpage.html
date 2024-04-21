@@ -33,7 +33,7 @@
         </div>
         <main class="content">
             <section id="SavePass-form" class="box SavePass active">
-                <form method="post" action="{% url 'save_credentials' %}">
+                <form method="POST" action="{% url 'save_credentials' %}" onsubmit="return checkCredentials()">
                     {% csrf_token %}
                     <h1>Submit your Credentials</h1>
                     <h4>You can submit your credentials here</h4>
@@ -67,7 +67,7 @@
                     <tr>
                       <th>Site Name</th>
                       <th>Username</th>
-                      <th>Password (Masked)</th>
+                      <th>Password</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -77,9 +77,15 @@
                       {% for credential in user_credentials %}
                       <tr>
                         <td>{{ credential.SiteName }}</td>
-                        <td>{{ credential.Username }}</td>
-                        <td>{{ credential.Password|slice:"0:4" }}... (password hidden)</td>
-                      </tr>
+                        <td>
+                            <span id="username_{{ forloop.counter }}">{{ credential.Username }}</span>
+                            <button id="copyUsernameButton_{{ forloop.counter }}"class="copy-button">CP</button>
+                        </td>
+                        <td>
+                            <span id="password_{{ forloop.counter }}">{{ credential.Password }}</span>
+                            <button id="copyPasswordButton_{{ forloop.counter }}"class="copy-button">CP</button>
+                        </td>
+                    </tr>
                       {% endfor %}
                     {% endif %}
                   </tbody>
@@ -99,15 +105,15 @@
                 <div>
                 
                      <h3>User Information:</h3>
-                     <p><strong>Name:</strong> {{ user_name }}</p>
-                     <p><strong>Email:</strong> {{ user_email }}</p>
+                     <p><strong>Name:</strong> {{ user_info.user_name }}</p>
+                     <p><strong>Email:</strong> {{ user_info.user_email }}</p>
                      
                 </div>
-                
+                <a href="{% url 'logout' %}"class ="logout-btn">Logout</a>
             </section>
         </main>
     </div>
 
-    <script src="script.js"></script>
+    
 </body>
 </html>

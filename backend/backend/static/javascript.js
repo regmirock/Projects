@@ -11,11 +11,17 @@ function checkPass() {
     let confirmPass = document.getElementById("confrm-pass").value.trim();
     let message = document.getElementById("message");
 
+    // Regular expression to match special characters
+    let specialCharacters = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+
     if (fullname.length === 0 || email.length === 0 || password.length === 0 || confirmPass.length === 0) {
         alert("Please fill in all fields");
         message.textContent = " ";
-    } else if (password.length === 0) {
-        alert("Password should not be empty!");
+    } else if (password.length < 8) {
+        alert("Password should be at least 8 characters long");
+        message.textContent = " ";
+    } else if (!specialCharacters.test(password)) {
+        alert("Password should contain at least one special character like @, _, %, or &");
         message.textContent = " ";
     } else if (password === confirmPass) {
         // If all conditions are met, you can submit the form
@@ -25,46 +31,40 @@ function checkPass() {
         message.textContent = "Password Mismatch";
     }
 }
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelector('form').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent form submission
+// reset_form.js
 
-        const email = document.getElementById('emailInput').value;
-        const password = document.getElementById('passwordInput').value;
+function checkPassword() {
+    let email = document.getElementById("email").value.trim();
+    let password = document.getElementById("password").value.trim();
+    let errorMessage = document.getElementById("error-message");
 
-        // Hash the password using bcrypt.js
-        bcrypt.hash(password, 10, function(err, hashedPassword) {
-            if (err) {
-                console.error('Error hashing password:', err);
-                return;
-            }
+    // Regular expression to match special characters
+    let specialCharacters = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
 
-            // Send email and hashed password to the backend
-            fetch('http://your-django-backend.com/api/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email: email, password: hashedPassword })
-            })
-            .then(response => {
-                if (response.ok) {
-                    // Login successful
-                    alert('Login successful');
-                    // Redirect to exthomepage
-                    window.location.href = 'exthomepage.html';
-                } else {
-                    // Login failed
-                    alert('Login failed. Please check your credentials.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while logging in.');
-            });
-        });
-    });
-});
+    if (email.length === 0 || password.length === 0) {
+        errorMessage.textContent = "Please fill in all fields";
+        return false;
+    }
+
+    if (password.length < 8) {
+        errorMessage.textContent = "Password should be at least 8 characters long";
+        return false;
+    }
+
+    if (!specialCharacters.test(password)) {
+        errorMessage.textContent = "Password should contain at least one special character like @, _, %, or &";
+        return false;
+    }
+
+    // If all validations pass, allow the form submission
+    return true;
+}
+
+
+
+
+
+
 
 
 

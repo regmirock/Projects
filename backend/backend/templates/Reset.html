@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Form</title>
+    {% load static%}
+    <link rel="stylesheet" type="text/css" href = {% static "/style.css"%}>
+    <script src="{% static 'javascript.js' %}"></script>
+</head>
+<body>
+    <div class="login-box">
+        <div class="logo-login">
+            <img src = "\static\SecurePlus.png" alt = "Logo" class = "logo">
+        </div>
+        <h1> Reset </h1>
+        <h4> Update your details</h4>
+        <form method ="POST" action ="{% url 'update_password'%}"onsubmit="return checkPassword()" >
+            {% csrf_token %}
+            <label> Existing Email </label>
+            <input type = "email" id = "email" placeholder = "" name="email">
+            <label for ="password"> New Master Password</label>
+            <input type="password" id ="password" placeholder = ""name="password">
+            <input type="submit" name="Update"onclick = "checkPassword()" value="Update">
+           </form>
+           <div id="error-message" class="error-message"></div>
+    </div>
+    
+</body>
+</html>  

@@ -4,11 +4,18 @@
   "version": "2.0",
   "description": "My first extension",
   "browser_action": {
-      "default_popup": "extlogin.html"
+    "default_popup": "extlogin.html"
   },
   "permissions": [
-      "activeTab",
-      "storage"
+    "activeTab",
+    "storage",
+    "http://localhost:8000/",
+    "http://127.0.0.1:8000/"
   ],
-  "content_security_policy": "script-src 'self' https://cdnjs.cloudflare.com; object-src 'self'"
+  "host_permissions": [
+    "http://localhost:8000/",
+    "http://127.0.0.1:8000/"
+  ],
+  
+  "content_security_policy": "script-src 'self' https://cdnjs.cloudflare.com https://yourdjangoapi.com; object-src 'self'"
 }

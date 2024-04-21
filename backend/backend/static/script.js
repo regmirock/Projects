@@ -75,10 +75,10 @@ function copyPassword() {
 
 // login.js
 
-document.getElementById("login-form").addEventListener("submit", function(event) {
-    event.preventDefault();
-    submitForm();
-});
+//document.getElementById("login-form").addEventListener("submit", function(event) {
+   // event.preventDefault();
+    //submitForm();
+//});
 
 async function getPasswordHash(password) {
     const response = await fetch("/get_password_hash", {
@@ -124,9 +124,84 @@ async function submitForm() {
     .catch(error => {
         console.error('Error:', error);
     });
+
+
+
+    
+    function copyText(elementId) {
+        var text = document.getElementById(elementId).innerText;
+    
+        // Use the Clipboard API to copy text to the clipboard
+        navigator.clipboard.writeText(text)
+            .then(function() {
+                // Success callback
+                console.log("Text copied to clipboard:", text);
+                alert("Text copied to clipboard!");
+            })
+            .catch(function(error) {
+                // Error callback
+                console.error("Failed to copy text: ", error);
+                alert("Failed to copy text. Please try again.");
+            });
+    }
 }
+document.addEventListener("DOMContentLoaded", function() {
+    // Select all copy buttons by their IDs
+    var copyUsernameButtons = document.querySelectorAll("[id^='copyUsernameButton_']");
+    var copyPasswordButtons = document.querySelectorAll("[id^='copyPasswordButton_']");
 
+    // Add click event listeners to copy username and password
+    copyUsernameButtons.forEach(function(button) {
+        button.addEventListener("click", function() {
+            var id = this.id.split("_")[1]; // Extract the unique identifier
+            copyText("username_" + id);
+        });
+    });
 
+    copyPasswordButtons.forEach(function(button) {
+        button.addEventListener("click", function() {
+            var id = this.id.split("_")[1]; // Extract the unique identifier
+            copyText("password_" + id);
+        });
+    });
+});
 
+function copyText(elementId) {
+    var text = document.getElementById(elementId).innerText;
+
+    // Use the Clipboard API to copy text to the clipboard
+    navigator.clipboard.writeText(text)
+        .then(function() {
+            // Success callback
+            console.log("Text copied to clipboard:", text);
+            alert("Text copied to clipboard!");
+        })
+        .catch(function(error) {
+            // Error callback
+            console.error("Failed to copy text: ", error);
+            alert("Failed to copy text. Please try again.");
+        });
+}
+function checkCredentials() {
+    // Get the values of input fields
+    let site = document.getElementById("Site").value.trim();
+    let username = document.getElementById("Username").value.trim();
+    let password = document.getElementById("Password").value.trim();
+
+    // Check if any field is empty
+    if (site === "" || username === "" || password === "") {
+        alert("Please fill in all fields.");
+        return false;
+    }
+
+    // Check if password meets the minimum length requirement
+    if (password.length < 8) {
+        alert("Password should be at least 8 characters long.");
+        return false;
+    }
+
+    // All validations pass, allow form submission
+    return true;
+}
 
 

@@ -21,6 +21,7 @@
             <label> Master Password</label>
             <input type="password" placeholder = "" name = "password">
             <input type = "submit" value = "Login">
+            <p> Forget Password? <a href="{% url 'reset_password' %}">Reset Password</a></p>
             <p> New to Secure Plus? <a href = "{% url 'register' %}"> register</a></p>
         </form>
         {% if error_message %}

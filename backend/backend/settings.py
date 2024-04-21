@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -41,18 +41,19 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     #extension
     'corsheaders',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    #extension
-    'corsheaders.middleware.CorsMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -84,8 +85,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'backend',
-        'USER': 'pradip',
-        'PASSWORD': 'pradip123',
+        'USER': 'root',
+        'PASSWORD': 'pradeep',
         'HOST': 'localhost',   # Change this to your MySQL server's hostname or IP address
         'PORT': '3306',        # Change this to your MySQL server's port
     }
@@ -151,6 +152,30 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # for extension
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # Adjust the port according to your frontend configuration
+    'chrome-extension://fgilbaemiaobofekjlaicknkgfejfhdm',
+      # Adjust the port according to your frontend configuration
     # Add more origins as needed
 ]
+# settings.py
+
+ENCRYPTION_KEY = b'3NLFFkrE0Gt7wAzXUQKF6yqLwvfIarJ-4-MDozh1OYw='
+BASE_URL = 'http://localhost:8000'  # Replace with your actual base URL
+
+
+
+
+#extension
+ALLOWED_HOSTS = ['yourdjangoapi.com', 'localhost', '127.0.0.1']
+CORS_ALLOWED_ORIGINS = [
+    'chrome-extension://fgilbaemiaobofejklaicnkgfejfhdm',
+]
+CORS_ALLOWED_ORIGINS += [
+    'https://localhost:8000',
+    'http://127.0.0.1:8000',
+]
+
+STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+

@@ -4,15 +4,26 @@ from .models import Registration,Credentials
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import authenticate, login
-
+from .models import Registration
+from django.conf import settings
+from django.core.mail import send_mail
+from django.utils.crypto import get_random_string
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
-#from django.shortcuts import render
-#from .models import Credentials
-#for extension
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
+from cryptography.fernet import Fernet
+import base64
+
+#extension
+from django.http import JsonResponse
+from django.views.decorators.http import require_http_methods
+import json
+from django.views.decorators.csrf import csrf_exempt
 
 
+
+
+
+#site
 def register(request):
     return render(request,"register.html" ) 
  
@@ -22,12 +33,15 @@ def index(request):
 def login1(request):
     return render(request,"login1.html" )
 
-#def extlogin(request):
-    return render(request,"extlogin.html")
 
 def newpage(request):
-    return render(request,"newpage.html")
+    return render(request,"newpage.html"),
 
+def logout(request):
+    return redirect('login1')
+
+def reset_password(request):
+    return render(request, 'reset.html')
 def insertuser(request):
     fullname = request.POST["fullname"];
     email = request.POST["email"];
@@ -37,19 +51,46 @@ def insertuser(request):
     us.save();
     return redirect('index')
 
-def save_credentials(request):
-    sitename = request.POST["Site"];
-    username = request.POST["Username"];
-    password = request.POST["Password"];
-    hashed_password = make_password(password)
-    # Retrieve email from session
-    email = request.session.get('user_email')
+from django.contrib.auth.hashers import make_password
+from django.shortcuts import render, redirect
+from .models import Registration
 
-    us = Credentials(SiteName=sitename, Username=username, Email=email, Password=hashed_password );
-    us.save();
-    return redirect('newpage')
+def update_password(request):
+    if request.method == "POST":
+        email = request.POST.get("email", "")
+        new_password = request.POST.get("password", "")
 
+        print("Email:", email)
+        print("New Password:", new_password)
 
+        # Check if the email exists in the database
+        try:
+            user = Registration.objects.get(Email=email)
+        except Registration.DoesNotExist:
+            # Handle the case where the user does not exist
+            # Redirect to a password reset form with an error message
+            error_message = "The provided email does not exist."
+            print(error_message)
+            return render(request, 'reset.html', {'error_message': error_message})
+
+        print("User found:", user)
+
+        # Hash the new password
+        hashed_password = make_password(new_password)
+
+        print("Hashed Password:", hashed_password)
+
+        # Update the user's password in the database
+        user.Password = hashed_password
+        user.save()
+
+        print("Password updated successfully")
+
+        # Redirect the user to a success page or login page
+        return redirect('login1')  # Adjust this to your login URL name
+
+    # If the request method is not POST, render a page with a form for resetting the password
+    return render(request, 'reset.html')
 
 def user_prof(request):
     if 'user_email' not in request.session:
@@ -68,39 +109,17 @@ def user_prof(request):
 
 
 
-
-
-def user_vault(request):
-    email = request.session.get('user_email')
-
-    print("User email:", email)
-
-    user_credentials = Credentials.objects.filter(Email=email)
-    print("User credentials:", user_credentials)
-
-    context = {'user_credentials': user_credentials}
-
-    if not user_credentials:
-        context['no_credentials'] = True  # Add a flag for empty credentials
-
-    return render(request, 'newpage.html', context)
-    
-
-
-
 def user_login(request):
     if request.method == 'POST':
-        email = request.POST['email']
-        password = request.POST['password']
+        email = request.POST.get('email')
+        password = request.POST.get('password')
 
         try:
             user = Registration.objects.get(Email=email)
             if check_password(password, user.Password):
-                # Authentication successful
-                # You can store user information in the session or use Django's built-in authentication system
-                request.session['user_id'] = user.id  # Store user ID in the session
+                request.session['user_id'] = user.id
                 request.session['user_email'] = email
-                return redirect('newpage')  # Redirect to the home page or any other page you want
+                return redirect('newpage')
             else:
                 error_message = 'Invalid password'
         except Registration.DoesNotExist:
@@ -109,49 +128,119 @@ def user_login(request):
         return render(request, 'login1.html', {'error_message': error_message})
 
     return render(request, 'login1.html')
-#def user_login(request):
+
+encryption_key = settings.ENCRYPTION_KEY
+cipher_suite = Fernet(encryption_key)
+
+def encrypt_data(data):
+    """Encrypt data using Fernet symmetric encryption."""
+    encrypted_data = cipher_suite.encrypt(data.encode())
+    return encrypted_data.decode()
+
+def decrypt_data(encrypted_data):
+    """Decrypt data using Fernet symmetric encryption."""
+    decrypted_data = cipher_suite.decrypt(encrypted_data.encode())
+    return decrypted_data.decode()
+
+def save_credentials(request):
     if request.method == 'POST':
-        email = request.POST['email']
-        password = request.POST['password']
+        sitename = request.POST.get("Site")
+        username = request.POST.get("Username")
+        password = request.POST.get("Password")
+        
+        # Encrypt the password before saving
+        encrypted_password = encrypt_data(password)
+        
+        # Retrieve email from session
+        email = request.session.get('user_email')
 
-        # Use Django's authenticate method for user verification
-        user = authenticate(Email=email, Password=make_password(password))
+        us = Credentials(SiteName=sitename, Username=username, Email=email, Password=encrypted_password)
+        us.save()
+        return redirect('/newpage')
+    else:
+        # Handle GET requests appropriately
+        return redirect('/')
 
-        if user is not None:
-            # User is authenticated, log them in
-            login(request, user)
-            return redirect('newpage')  # Redirect to your desired page
+def user_vault(request):
+    email = request.session.get('user_email')
+    if email:
+        print("User email:", email)
 
-        else:
-            # Authentication failed, provide error message
-            error_message = 'Invalid login credentials.'
-            return render(request, 'login1.html', {'error_message': error_message})
+        user_credentials = Credentials.objects.filter(Email=email)
+        print("User credentials:", user_credentials)
+        
+        user = Registration.objects.get(Email=email)
+        user_info = {
+            'user_name': user.Name,
+            'user_email': user.Email,
+        }
 
-    return render(request, 'login1.html')
+        # Decrypt passwords before sending to the template
+        decrypted_credentials = []
+        for credential in user_credentials:
+            decrypted_password = decrypt_data(credential.Password)
+            decrypted_credentials.append({
+                'SiteName': credential.SiteName,
+                'Username': credential.Username,
+                'Password': decrypted_password
+            })
+
+        context = {
+            'user_credentials': decrypted_credentials,
+            'user_info': user_info
+        }
+
+        if not user_credentials:
+            context['no_credentials'] = True  # Add a flag for empty credentials
+
+        return render(request, 'newpage.html', context)
+    else:
+        # Handle the case where there's no user email in session
+        return redirect('/')
+
+
+
+
+
+
+
+
+
+
+
     
 
 
-#for extension
-from django.http import JsonResponse
-from django.contrib.auth import authenticate
-from django.contrib.auth.hashers import check_password
-from django.contrib.auth import get_user_model
 
-def extlogin(request):
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        password = request.POST.get('password')
 
-        # Retrieve the user based on the email
-        User = get_user_model()
+
+
+
+def login_request(request):
+    # Your login logic here
+    return JsonResponse({'message': 'Login request received'})
+
+
+#extension
+@csrf_exempt
+@require_http_methods(["POST"])
+def login_api(request):
+    try:
+        data = json.loads(request.body)
+        email = data.get('email')
+        password = data.get('password')
+        
         try:
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
-            user = None
+            user = Registration.objects.get(Email=email)
+            if check_password(password, user.Password):  # Correct way to check hashed password
+                return JsonResponse({'status': 'success', 'message': 'Login successful'}, status=200)
+            else:
+                return JsonResponse({'status': 'error', 'message': 'Invalid credentials'}, status=401)
+        except Registration.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'User does not exist'}, status=404)
 
-        if user is not None and check_password(password, user.password):
-            # Authentication successful
-            return JsonResponse({'message': 'Login successful'})
-        else:
-            # Authentication failed
-            return JsonResponse({'message': 'Invalid credentials'}, status=401)
+    except json.JSONDecodeError:
+        return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
+
+
+
